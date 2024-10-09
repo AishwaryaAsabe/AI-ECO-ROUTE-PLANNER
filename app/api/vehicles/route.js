@@ -1,26 +1,50 @@
-import dbConnect from '../../utils/db';
-import Vehicle from '../../models/Vehicles';
+import Vehicle from '../../models/Vehicles'; // Adjust the path as necessary
+import dbConnect from '../../utils/db'; // Adjust the path as necessary
 
 export async function POST(req) {
   await dbConnect();
 
+  const { type, fuelType, capacity, driverId } = await req.json();
+
+  // Basic validation
+  if (!type || !fuelType || !capacity || !driverId) {
+    return new Response(
+      JSON.stringify({ error: 'All fields required' }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }, // Fixed typo
+      }
+    );
+  }
+
   try {
-    const body = await req.json();
-    const vehicle = new Vehicle(body);
-    await vehicle.save();
-    return new Response(JSON.stringify(vehicle), { status: 201 });
+    // Create the vehicle and associate it with the driver
+    const vehicle = await Vehicle.create({
+      type,
+      fuelType,
+      capacity: Number(capacity), // Ensure capacity is stored as a number
+      driver: driverId, // Link to the driver's ID
+    });
+
+    return new Response(
+      JSON.stringify({ message: 'Vehicle Registered Successfully', vehicle }),
+      {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to create vehicle' }), { status: 400 });
+    console.error(error);
+    return new Response(
+      JSON.stringify({ error: 'Failed to Register Vehicle' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }, // Fixed typo
+      }
+    );
   }
 }
 
-export async function GET(req) {
-  await dbConnect();
 
-  try {
-    const vehicles = await Vehicle.find({});
-    return new Response(JSON.stringify(vehicles), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to fetch vehicles' }), { status: 400 });
-  }
-}
+
+

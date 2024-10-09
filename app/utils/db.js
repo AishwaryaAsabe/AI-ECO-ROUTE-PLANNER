@@ -22,12 +22,33 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose.connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        mongoose.connection.on('connected', () => {
+          console.log('Connected to MongoDB');
+        });
+
+        mongoose.connection.on('error', (error) => {
+          console.error('MongoDB connection error:', error);
+        });
+
+        return mongoose;
+      })
+      .catch((error) => {
+        console.error('MongoDB connection error:', error);
+        throw new Error('Failed to connect to MongoDB');
+      });
   }
+
   cached.conn = await cached.promise;
   return cached.conn;
 }
+
+// Optional cleanup on application termination
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed due to application termination');
+  process.exit(0);
+});
 
 export default dbConnect;

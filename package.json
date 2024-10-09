@@ -11,7 +11,9 @@
   "dependencies": {
     "@react-google-maps/api": "^2.19.3",
     "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
     "chart.js": "^4.4.4",
+    "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
     "mongoose": "^8.6.3",
     "next": "14.2.13",

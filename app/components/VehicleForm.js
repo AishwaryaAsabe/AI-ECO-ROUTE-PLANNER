@@ -1,23 +1,46 @@
-"use client" ;
+"use client";
 import { useState } from 'react';
 
-export default function VehicleForm() {
+export default function VehicleForm({ driverId }) {
   const [vehicle, setVehicle] = useState({ type: '', fuelType: '', capacity: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Convert capacity to a number
+    const payload = { 
+      ...vehicle, 
+      driverId, 
+      capacity: Number(vehicle.capacity) // Ensure capacity is a number
+    };
+  
+    // Validate input
+    if (!payload.type || !payload.fuelType || !payload.capacity || !payload.driverId) {
+      alert('Please fill out all fields');
+      return;
+    }
+  
+    // Log the payload for debugging
+    console.log('Payload to be sent:', payload);
+  
     // Submit the vehicle data to the API
     const res = await fetch('/api/vehicles', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(vehicle),
+      body: JSON.stringify(payload),
     });
-    const data = await res.json();
-    console.log(data);
-    // Reset the form or show a success message
-    setVehicle({ type: '', fuelType: '', capacity: '' });
+    
+    if (!res.ok) {
+      const errorData = await res.json(); // Parse the error response
+      console.error('Error response:', errorData); // Log the error
+      alert(errorData.error || 'An error occurred');
+    } else {
+      const data = await res.json();
+      console.log('Response from server:', data);
+      setVehicle({ type: '', fuelType: '', capacity: '' }); // Reset form
+    }
   };
 
   return (
@@ -41,7 +64,7 @@ export default function VehicleForm() {
         type="number"
         placeholder="Capacity"
         value={vehicle.capacity}
-        onChange={(e) => setVehicle({ ...vehicle, capacity: e.target.value })}
+        onChange={(e) => setVehicle({ ...vehicle, capacity: parseInt(e.target.value) || '' })} // Parse to int
         className="border p-2 rounded mb-2 w-full"
       />
       <button type="submit" className="bg-blue-600 text-white p-2 rounded">Add Vehicle</button>

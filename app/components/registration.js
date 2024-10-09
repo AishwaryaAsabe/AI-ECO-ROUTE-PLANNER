@@ -1,84 +1,30 @@
 "use client";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import UserRegistrationForm from './userRegistrationForm';
+import DriverRegistrationForm from './driverRegistrationFrom';
 
 export default function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    role: 'user', // Default role can be set to 'user' or 'admin'
-  });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const router = useRouter();
+  const [role, setRole] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    // Submit the registration data to the API
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      setSuccess('Registration successful! Redirecting to login...');
-      setTimeout(() => {
-        router.push('/auth/login'); // Redirect to login page after successful registration
-      }, 2000);
-    } else {
-      setError(data.error || 'Registration failed. Please try again.');
-    }
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4 p-4 border rounded shadow-md bg-white">
+    <div className="mb-4 p-4 border rounded shadow-md bg-white">
       <h3 className="text-lg font-semibold mb-2">Register</h3>
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
-      <input
-        type="text"
-        name="username"
-        placeholder="Username"
-        value={formData.username}
-        onChange={handleChange}
+      <select
+        value={role}
+        onChange={handleRoleChange}
         className="border p-2 rounded mb-2 w-full"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-        className="border p-2 rounded mb-2 w-full"
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-        className="border p-2 rounded mb-2 w-full"
-        required
-      />
-      <button type="submit" className="bg-blue-600 text-white p-2 rounded">
-        Register
-      </button>
-    </form>
+      >
+        <option value="">Select role</option>
+        <option value="user">User</option>
+        <option value="driver">Driver</option>
+      </select>
+
+      {role === 'user' && <UserRegistrationForm />}
+      {role === 'driver' && <DriverRegistrationForm />}
+    </div>
   );
 }
