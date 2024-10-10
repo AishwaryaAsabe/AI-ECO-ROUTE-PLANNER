@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios here
-
+import axios from 'axios';
 
 export default function DriverProfile() {
   const [driverData, setDriverData] = useState(null);
@@ -10,16 +9,15 @@ export default function DriverProfile() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
-
   useEffect(() => {
     const fetchDriverProfile = async () => {
-      const driverId = localStorage.getItem('userId'); // Fetch driverId from localStorage
+      const driverId = localStorage.getItem('userId'); 
       if (!driverId) {
         setError('Driver ID is not available');
         setLoading(false);
         return;
       }
-  
+
       try {
         const response = await axios.get(`/api/drivers/profile?driverId=${driverId}`);
         if (response.status === 200) {
@@ -27,7 +25,6 @@ export default function DriverProfile() {
           setFormData({ ...response.data });
         } else {
           setError('Driver not found');
-          console.log('Driver not found');
         }
       } catch (error) {
         console.error('Error fetching driver profile:', error);
@@ -40,24 +37,24 @@ export default function DriverProfile() {
         setLoading(false);
       }
     };
-  
+
     fetchDriverProfile();
   }, []);
 
   const handleEditToggle = () => {
-    setIsEditing(!isEditing); // Toggle editing mode
+    setIsEditing(!isEditing); 
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const driverId = localStorage.getItem("userId"); // Assuming driverId is still available here
+    const driverId = localStorage.getItem("userId");
 
     try {
       const response = await axios.put(`/api/drivers/profile?driverId=${driverId}`, formData);
       if (response.status === 200) {
         setDriverData(response.data);
         setFormData(response.data);
-        setIsEditing(false); // Exit edit mode after successful update
+        setIsEditing(false);
       }
     } catch (error) {
       console.error("Error updating driver profile:", error);
@@ -72,14 +69,14 @@ export default function DriverProfile() {
       [name]: value,
     }));
   };
-  
 
-  // Render the driver's profile or a loading/error message
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  const { name, email, contact } = formData;  // Destructure formData to get the values
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center  h-screen bg-gray-100">
       <h1 className="text-3xl font-bold mb-6">Driver Profile</h1>
       <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
         <form onSubmit={handleUpdate}>
@@ -88,8 +85,9 @@ export default function DriverProfile() {
             {isEditing ? (
               <input
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                name="name"
+                value={name || ''}
+                onChange={handleChange}
                 className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
                 required
               />
@@ -102,8 +100,9 @@ export default function DriverProfile() {
             {isEditing ? (
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={email || ''}
+                onChange={handleChange}
                 className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
                 required
               />
@@ -116,8 +115,9 @@ export default function DriverProfile() {
             {isEditing ? (
               <input
                 type="number"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
+                name="contact"
+                value={contact || ''}
+                onChange={handleChange}
                 className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
                 required
               />

@@ -5,13 +5,23 @@ import DriverProfile from '../../components/driverProfile'; // Import DriverProf
 
 export default function DriversDashboardFormPage() {
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-            <div className="w-full max-w-md mb-6">
-                <DriverProfile /> {/* Include DriverProfile component */}
-            </div>
-            <div className="w-full max-w-md">
-                <VehicleForm /> {/* VehicleForm component remains as is */}
-            </div>
-        </div>
+    //     <div className="flex flex-row mt-6 items-start  h-screen bg-gray-100">
+    //     <div className="w-full max-w-md mr-6"> 
+    //         <DriverProfile /> {/* Include DriverProfile component */}
+    //     </div>
+    //     <div className="w-full max-w-md">
+    //         <VehicleForm /> {/* VehicleForm component */}
+    //     </div>
+    // </div>
+
+<section className="grid grid-cols-2 gap-6">
+    <div>
+        <DriverProfile /> {/* Include DriverProfile component */}
+    </div>
+    <div className="mt-14">
+        <VehicleForm /> {/* Include VehicleForm component */}
+    </div>
+</section>
+
     );
 }

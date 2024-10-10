@@ -1,8 +1,19 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function VehicleForm({ driverId }) {
+export default function VehicleForm() {
   const [vehicle, setVehicle] = useState({ type: '', fuelType: '', capacity: '' });
+  const [driverId, setDriverId] = useState(null); // Add state for driverId
+
+
+
+  useEffect(() => {
+    // Get the driverId from localStorage
+    const storedDriverId = localStorage.getItem('userId');
+    if (storedDriverId) {
+      setDriverId(storedDriverId);
+    }
+  }, []); // Empty dependency array to run this effect only on mount
 
   const handleSubmit = async (e) => {
     e.preventDefault();

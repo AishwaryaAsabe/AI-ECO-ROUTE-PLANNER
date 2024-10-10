@@ -34,7 +34,7 @@ localStorage.setItem('userId', data.userId); // Now userId is explicitly stored
   
     // Redirect based on role
     if (data.role === 'admin') {
-      router.push('/admin-dashboard');
+      router.push('/pages/admin-dashboard');
     } else if (data.role === 'driver') {
       router.push('/pages/DriversDashboard');
     } else if (data.role === 'user') {
