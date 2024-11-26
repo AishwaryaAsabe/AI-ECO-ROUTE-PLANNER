@@ -32,21 +32,28 @@ export async function GET(req) {
 export async function PUT(req) {
   await dbConnect(); // Ensure database connection
 
-  const { id, name, email, contact } = await req.json(); // Get updated driver data from request body
   try {
+    const { id, name, email, contact } = await req.json(); // Get updated driver data from request body
+    if (!id) {
+      return new Response(JSON.stringify({ error: 'Driver ID is required' }), { status: 400 });
+    }
+
     const updatedDriver = await Driver.findByIdAndUpdate(id, { name, email, contact }, {
       new: true, // Return the updated document
       runValidators: true, // Run schema validators
     });
+
     if (!updatedDriver) {
       return new Response(JSON.stringify({ error: 'Driver not found' }), { status: 404 });
     }
+
     return new Response(JSON.stringify(updatedDriver), { status: 200 });
   } catch (error) {
     console.error("Error updating driver profile:", error);
     return new Response(JSON.stringify({ error: 'Error updating driver profile' }), { status: 500 });
   }
 }
+
 
 // DELETE: Delete driver profile by ID
 export async function DELETE(req) {

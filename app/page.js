@@ -21,7 +21,8 @@ export default function HomeRedirect() {
 
   useEffect(() => {
     // Redirect to the login page when the app is accessed
-    router.push('/auth/login');
+    
+    router.push('/pages/home');
   }, [router]);
 
   return null; // or a loading spinner/message if needed

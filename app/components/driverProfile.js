@@ -48,19 +48,22 @@ export default function DriverProfile() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const driverId = localStorage.getItem("userId");
-
+  
     try {
-      const response = await axios.put(`/api/drivers/profile?driverId=${driverId}`, formData);
+      const response = await axios.put('/api/drivers/profile', { ...formData, id: driverId });
       if (response.status === 200) {
         setDriverData(response.data);
         setFormData(response.data);
         setIsEditing(false);
+      } else {
+        setError("Failed to update profile");
       }
     } catch (error) {
       console.error("Error updating driver profile:", error);
       setError("Failed to update profile");
     }
   };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;

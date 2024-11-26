@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.10.3",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@react-google-maps/api": "^2.19.3",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.4",
+    "framer-motion": "^11.11.9",
     "jsonwebtoken": "^9.0.2",
+    "kickbox": "^2.0.4",
     "leaflet": "^1.9.4",
     "mongoose": "^8.6.3",
     "next": "14.2.13",
@@ -25,6 +30,8 @@
     "react-leaflet": "^4.2.1"
   },
   "devDependencies": {
+    "@types/node": "22.7.6",
+    "@types/react": "18.3.11",
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
     "postcss": "^8",
